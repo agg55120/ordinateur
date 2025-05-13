@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Application de Recherche avec Mot de Passe</title>
+  <style>
+    /* Mise en forme générale du body */
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background-color: #f4f6f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    /* Popup du mot de passe */
+    .password-popup {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 300px;
+      transition: opacity 0.3s ease;
+    }
+
+    .password-popup h3 {
+      margin-bottom: 20px;
+      font-size: 20px;
+      color: #333;
+    }
+
+    .password-popup input {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      outline: none;
+      transition: border 0.3s ease;
+    }
+
+    .password-popup input:focus {
+      border: 1px solid #4CAF50;
+    }
+
+    .password-popup button {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .password-popup button:hover {
+      background-color: #45a049;
+    }
+
+    .error-message {
+      color: red;
+      font-size: 14px;
+      margin-top: 10px;
+      display: none;
+    }
+
+    /* Style de l'application principale */
+    .app-window {
+      background-color: #fff;
+      width: 80%;
+      max-width: 900px;
+      border-radius: 15px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      display: none;
+    }
+
+    .title-bar {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #4CAF50;
+    }
+
+    .search-bar {
+      width: 100%;
+      padding: 15px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 20px;
+      outline: none;
+      transition: border 0.3s ease;
+    }
+
+    .search-bar:focus {
+      border: 1px solid #4CAF50;
+    }
+
+    .results {
+      margin-top: 20px;
+    }
+
+    .result {
+      display: flex;
+      margin-bottom: 25px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #f2f2f2;
+      transition: transform 0.3s ease;
+    }
+
+    .result:hover {
+      transform: scale(1.02);
+    }
+
+    .result img {
+      width: 120px;
+      height: 120px;
+      border-radius: 10px;
+      object-fit: cover;
+      margin-right: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .result .details {
+      flex-grow: 1;
+    }
+
+    .result .details h3 {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .result .details p {
+      font-size: 15px;
+      color: #555;
+    }
+
+    .admin-mode {
+      display: none;
+      margin-top: 40px;
+      background-color: #f9f9f9;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .admin-mode h3 {
+      margin-bottom: 20px;
+      font-size: 22px;
+      color: #333;
+    }
+
+    .admin-mode input, .admin-mode textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      outline: none;
+      transition: border 0.3s ease;
+    }
+
+    .admin-mode input:focus, .admin-mode textarea:focus {
+      border: 1px solid #4CAF50;
+    }
+
+    .admin-mode button {
+      padding: 12px 20px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .admin-mode button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Popup pour entrer le mot de passe -->
+  <div id="passwordPopup" class="password-popup">
+    <h3>Entrez le mot de passe pour accéder à l'application</h3>
+    <input type="password" id="passwordInput" placeholder="Mot de passe">
+    <button onclick="validatePassword()">Valider</button>
+    <div id="error" class="error-message">Mot de passe incorrect, essayez à nouveau</div>
+  </div>
+
+  <!-- Application principale -->
+  <div class="app-window" id="appWindow" style="display: none;">
+    <div class="title-bar">🔍 Application de Recherche</div>
+    
+    <input type="text" id="searchInput" class="search-bar" placeholder="Rechercher...">
+
+    <div class="results" id="searchResults">
+      <!-- Les résultats de recherche s'afficheront ici -->
+    </div>
+
+    <div class="admin-mode" id="adminMode">
+      <h3>Mode Admin</h3>
+      <input type="text" id="adminTitle" placeholder="Titre de l'élément">
+      <input type="text" id="adminImageUrl" placeholder="URL de l'image">
+      <textarea id="adminDescription" placeholder="Note..."></textarea>
+      <button onclick="addNewItem()">Ajouter un nouvel élément</button>
+    </div>
+  </div>
+
+  <script>
+    // Données initiales
+    const items = [
+      {
+        title: 'Application Notes',
+        imageUrl: 'https://via.placeholder.com/100',
+        description: 'Une application de notes où vous pouvez garder vos idées et projets.',
+        keywords: ['notes', 'application', 'idées'],
+      },
+      {
+        title: 'Bureau virtuel',
+        imageUrl: 'https://via.placeholder.com/100',
+        description: 'Un projet de bureau virtuel avec une interface graphique personnalisée.',
+        keywords: ['bureau', 'interface', 'graphique'],
+      },
+      {
+        title: 'Animation CSS',
+        imageUrl: 'https://via.placeholder.com/100',
+        description: 'Un projet d\'animation en CSS pour des effets dynamiques.',
+        keywords: ['CSS', 'animation', 'effets'],
+      }
+    ];
+
+    const adminItems = [
+      {
+        title: 'Test 1',
+        imageUrl: 'https://via.placeholder.com/100',
+        description: 'Recherche Test 1.',
+        keywords: ['test1'],
+      },
+      {
+        title: 'Test 2',
+        imageUrl: 'https://via.placeholder.com/100',
+        description: 'Recherche Test 2.',
+        keywords: ['test2'],
+      },
+      {
+        title: 'Test 3',
+        imageUrl: 'https://via.placeholder.com/100',
+        description: 'Recherche Test 3.',
+        keywords: ['test3'],
+      },
+      {
+        title: 'Test 4',
+        imageUrl: 'https://via.placeholder.com/100',
+        description: 'Recherche Test 4.',
+        keywords: ['test4'],
+      }
+    ];
+
+    // Fonction pour valider le mot de passe
+    function validatePassword() {
+      const enteredPassword = document.getElementById('passwordInput').value;
+      const error = document.getElementById('error');
+
+      if (enteredPassword === '0000') {
+        // Activer le mode admin
+        items.push(...adminItems);
+        document.getElementById('passwordPopup').style.display = 'none';
+        document.getElementById('appWindow').style.display = 'block';
+        searchItems();
+      } else if (enteredPassword === '1234') {
+        // Mode normal
+        document.getElementById('passwordPopup').style.display = 'none';
+        document.getElementById('appWindow').style.display = 'block';
+        searchItems();
+      } else {
+        error.style.display = 'block';
+      }
+    }
+
+    // Fonction pour afficher les résultats de la recherche
+    function searchItems() {
+      const searchInput = document.getElementById('searchInput').value.toLowerCase();
+      const searchResults = document.getElementById('searchResults');
+      searchResults.innerHTML = '';
+
+      const filteredItems = items.filter(item => {
+        return item.keywords.some(keyword => keyword.toLowerCase().includes(searchInput));
+      });
+
+      filteredItems.forEach(item => {
+        const resultDiv = document.createElement('div');
+        resultDiv.classList.add('result');
+
+        resultDiv.innerHTML = `
+          <img src="${item.imageUrl}" alt="${item.title}">
+          <div class="details">
+            <h3>${item.title}</h3>
+            <p>${item.description}</p>
+          </div>
+        `;
+
+        searchResults.appendChild(resultDiv);
+      });
+    }
+
+    // Fonction pour activer le mode admin
+    function toggleAdminMode() {
+      const adminMode = document.getElementById('adminMode');
+      adminMode.style.display = adminMode.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // Fonction pour ajouter un nouvel élément en mode admin
+    function addNewItem() {
+      const title = document.getElementById('adminTitle').value;
+      const imageUrl = document.getElementById('adminImageUrl').value;
+      const description = document.getElementById('adminDescription').value;
+
+      if (title && imageUrl && description) {
+        const newItem = {
+          title: title,
+          imageUrl: imageUrl,
+          description: description,
+          keywords: [title.toLowerCase(), description.toLowerCase()],
+        };
+
+        items.push(newItem);
+        searchItems();  // Met à jour les résultats de la recherche
+      }
+    }
+
+    // Ajouter un événement pour rechercher à chaque changement dans le champ de recherche
+    document.getElementById('searchInput').addEventListener('input', searchItems);
+
+  </script>
+
+</body>
+</html>

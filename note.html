@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Notes - Dossiers protégés</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background-color: #e0e0e0;
+    }
+
+    .app-window {
+      width: 900px;
+      height: 550px;
+      margin: 40px auto;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .title-bar {
+      background: linear-gradient(to right, #dcdcdc, #c0c0c0);
+      padding: 8px 12px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #aaa;
+    }
+
+    .main {
+      display: flex;
+      height: 100%;
+    }
+
+    .sidebar {
+      width: 200px;
+      background-color: #f0f0f0;
+      border-right: 1px solid #ccc;
+      padding: 10px;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+
+    .folder {
+      margin-bottom: 15px;
+    }
+
+    .folder-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #333;
+    }
+
+    .note-link {
+      display: block;
+      padding: 5px 8px;
+      margin: 2px 0;
+      background-color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+      color: #222;
+      font-size: 14px;
+    }
+
+    .note-link:hover {
+      background-color: #d9eaff;
+    }
+
+    .note-viewer {
+      flex-grow: 1;
+      padding: 20px;
+      background-color: #fffef5;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      font-family: Consolas, monospace;
+      font-size: 15px;
+      line-height: 1.5;
+      color: #333;
+      user-select: none;
+    }
+
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      text-align: center;
+      z-index: 1000;
+    }
+
+    .popup input {
+      padding: 5px;
+      font-size: 14px;
+    }
+
+    .popup .error {
+      color: red;
+      margin-top: 10px;
+      display: none;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="app-window">
+    <div class="title-bar">
+      <div>📁 Notes - Dossiers protégés</div>
+    </div>
+
+    <div class="main">
+      <div class="sidebar">
+        <div class="folder">
+          <div class="folder-title">📌 Projets</div>
+          <div class="note-link" onclick="afficherNote('note1')">Bureau virtuel</div>
+          <div class="note-link" onclick="afficherNote('note2')">Application Notes</div>
+        </div>
+
+        <div class="folder">
+          <div class="folder-title">🧠 Idées</div>
+          <div class="note-link" onclick="afficherNote('note3')">Système de fichiers</div>
+          <div class="note-link" onclick="afficherNote('note4')">Animations CSS</div>
+        </div>
+
+        <div class="folder">
+          <div class="folder-title">🔒 Sécurisé (mot de passe : 789)</div>
+          <div class="note-link" onclick="verifierMotDePasse('1234', 'note5')">Confidentialité</div>
+          <div class="note-link" onclick="verifierMotDePasse('1234', 'note6')">Sécurité des données</div>
+        </div>
+      </div>
+
+      <div class="note-viewer" id="noteContent">
+        Sélectionne une note dans la colonne de gauche pour l'afficher ici.
+      </div>
+    </div>
+  </div>
+
+  <div id="popup" class="popup">
+    <h3>Entrer le mot de passe</h3>
+    <input type="password" id="motDePasse" placeholder="Mot de passe" />
+    <div id="error" class="error">Mot de passe incorrect</div>
+  </div>
+
+  <script>
+    const notes = {
+      note1: `Projet : Bureau virtuel
+- Page HTML avec fond d'écran personnalisé
+- Icônes : Google, YouTube, GitHub, etc.
+- Barre des tâches avec horloge
+- Ouverture d'applications simulées`,
+      note2: `Application Notes
+- Lecture seule
+- Design réaliste avec barre de titre
+- Possibilité de simuler plusieurs notes`,
+      note3: `Idée : Simuler un explorateur de fichiers
+- Créer une arborescence interactive
+- Ajouter fichiers .txt et images
+- Lecture seule ou double-clique pour ouvrir`,
+      note4: `Idée : Ajouter des animations CSS
+- Icônes flottantes au survol
+- Transitions fluides
+- Apparition/défilement des fenêtres`,
+      note5: `Confidentialité des données
+- Protéger les informations sensibles
+- Gestion des autorisations
+- Cryptage des fichiers`,
+      note6: `Sécurité des données
+- Protection des données personnelles
+- Sauvegarde et restauration
+- Enregistrement chiffré`
+    };
+
+    let folderId = '';
+
+    // Fonction pour afficher les notes sans mot de passe (pour tous les dossiers sauf "Sécurisé")
+    function afficherNote(id) {
+      const note = notes[id];
+      const viewer = document.getElementById('noteContent');
+      viewer.textContent = note;
+    }
+
+    // Fonction pour vérifier le mot de passe (pour le dossier "Sécurisé" seulement)
+    function verifierMotDePasse(correctPassword, noteId) {
+      folderId = noteId;
+      const popup = document.getElementById('popup');
+      const error = document.getElementById('error');
+      popup.style.display = 'block';
+      error.style.display = 'none';
+      const motDePasseInput = document.getElementById('motDePasse');
+      
+      motDePasseInput.onkeydown = function(e) {
+        if (e.key === 'Enter') {
+          validerMotDePasse(correctPassword);
+        }
+      };
+    }
+
+    function validerMotDePasse(correctPassword) {
+      const enteredPassword = document.getElementById('motDePasse').value;
+      const error = document.getElementById('error');
+
+      if (enteredPassword === correctPassword) {
+        afficherNote(folderId);
+        document.getElementById('popup').style.display = 'none';
+      } else {
+        error.style.display = 'block';
+      }
+    }
+
+  </script>
+
+</body>
+</html>
