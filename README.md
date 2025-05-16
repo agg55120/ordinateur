@@ -2,6 +2,6 @@
   <head>
   </head>
   <body>
-    <a href="ordinateur tilted.html">test<a/>
+    <a href="ordinateur tilted.html">test</a>
   </body>
 </html>
