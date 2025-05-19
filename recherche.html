@@ -276,24 +276,30 @@
 
     // Fonction pour valider le mot de passe
     function validatePassword() {
-      const enteredPassword = document.getElementById('passwordInput').value;
-      const error = document.getElementById('error');
+  const enteredPassword = document.getElementById('passwordInput').value.trim(); // Supprime les espaces
+  const error = document.getElementById('error');
 
-      if (enteredPassword === 'admin@') {
-        // Activer le mode admin
-        items.push(...adminItems);
-        document.getElementById('passwordPopup').style.display = 'none';
-        document.getElementById('appWindow').style.display = 'block';
-        searchItems();
-      } else if (enteredPassword === '5694') {
-        // Mode normal
-        document.getElementById('passwordPopup').style.display = 'none';
-        document.getElementById('appWindow').style.display = 'block';
-        searchItems();
-      } else {
-        error.style.display = 'block';
-      }
-    }
+  console.log('Mot de passe entré :', enteredPassword); // Pour debug (à supprimer après)
+
+  if (enteredPassword === 'admin@') {
+    // Mot de passe admin
+    items.push(...adminItems);
+    document.getElementById('passwordPopup').style.display = 'none';
+    document.getElementById('appWindow').style.display = 'block';
+    document.getElementById('adminMode').style.display = 'block'; // Affiche le mode admin
+    searchItems();
+  } else if (enteredPassword === '5694') {
+    // Mot de passe utilisateur normal
+    document.getElementById('passwordPopup').style.display = 'none';
+    document.getElementById('appWindow').style.display = 'block';
+    document.getElementById('adminMode').style.display = 'none'; // Ne montre pas le mode admin
+    searchItems();
+  } else {
+    // Mauvais mot de passe
+    error.style.display = 'block';
+  }
+}
+
 
     // Fonction pour afficher les résultats de la recherche
     function searchItems() {
