@@ -228,49 +228,49 @@
     // Données initiales
     const items = [
       {
-        title: 'tantative de "paix"',
+        title: 'Application Notes',
         imageUrl: 'https://via.placeholder.com/100',
-        description: 'j ai essayer de faire la paix avec les anarchiques mais ils ont refuser mais il ne seront bientot plus de se monde .',
-        keywords: ['paix', 'anarchiques', 'con'],
+        description: 'Une application de notes où vous pouvez garder vos idées et projets.',
+        keywords: ['notes', 'application', 'idées'],
       },
       {
-        title: 'commande d'armes',
+        title: 'Bureau virtuel',
         imageUrl: 'https://via.placeholder.com/100',
-        description: 'j ai effectuer un achat d arme qui provient de l alpha corp. ',
-        keywords: ['alpha', 'alpha corp', 'arme'],
+        description: 'Un projet de bureau virtuel avec une interface graphique personnalisée.',
+        keywords: ['bureau', 'interface', 'graphique'],
       },
       {
-        title: 'racheter la ville',
+        title: 'Animation CSS',
         imageUrl: 'https://via.placeholder.com/100',
-        description: 'j ai essayer de racheter la ville mais l omega corp a refuser et ma meme menacer.',
-        keywords: ['rachat', 'argent', 'luciano'],
+        description: 'Un projet d\'animation en CSS pour des effets dynamiques.',
+        keywords: ['CSS', 'animation', 'effets'],
       }
     ];
 
     const adminItems = [
       {
-        title: 'Test 4 06/06/2025',
+        title: 'Test 1',
         imageUrl: 'https://via.placeholder.com/100',
-        description: 'finalisation du projet titan.',
-        keywords: ['test4'],
+        description: 'Recherche Test 1.',
+        keywords: ['test1'],
       },
       {
-        title: 'Test 3 02/06/2025',
+        title: 'Test 2',
         imageUrl: 'https://via.placeholder.com/100',
-        description: 'une erreur a été comise ma soeur a ete téléporter je ne sais pas ou peut erte qu elle est mort desintegrer.',
-        keywords: ['test3'],
-      },
-      {
-        title: 'Test 2 19/05/2025',
-        imageUrl: 'https://via.placeholder.com/100',
-        description: 'stabilization de la machine apres 16 essaye foireur mais c est bon.',
+        description: 'Recherche Test 2.',
         keywords: ['test2'],
       },
       {
-        title: 'Test 1 12/05/2025',
+        title: 'Test 3',
         imageUrl: 'https://via.placeholder.com/100',
-        description: 'un problem avec la faille , elle a amener des chose venus d une autre dimention .',
-        keywords: ['test1'],
+        description: 'Recherche Test 3.',
+        keywords: ['test3'],
+      },
+      {
+        title: 'Test 4',
+        imageUrl: 'https://via.placeholder.com/100',
+        description: 'Recherche Test 4.',
+        keywords: ['test4'],
       }
     ];
 
@@ -279,13 +279,13 @@
       const enteredPassword = document.getElementById('passwordInput').value;
       const error = document.getElementById('error');
 
-      if (enteredPassword === 'admin@') {
+      if (enteredPassword === '0000') {
         // Activer le mode admin
         items.push(...adminItems);
         document.getElementById('passwordPopup').style.display = 'none';
         document.getElementById('appWindow').style.display = 'block';
         searchItems();
-      } else if (enteredPassword === '5694') {
+      } else if (enteredPassword === '1234') {
         // Mode normal
         document.getElementById('passwordPopup').style.display = 'none';
         document.getElementById('appWindow').style.display = 'block';
