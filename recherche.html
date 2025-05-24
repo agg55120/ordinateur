@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Application de Recherche avec Mot de Passe</title>
   <style>
-    /* Mise en forme générale du body */
     body {
       font-family: 'Segoe UI', Tahoma, sans-serif;
       background-color: #f4f6f9;
@@ -16,8 +15,6 @@
       height: 100vh;
       flex-direction: column;
     }
-
-    /* Popup du mot de passe */
     .password-popup {
       position: absolute;
       top: 50%;
@@ -31,13 +28,11 @@
       width: 300px;
       transition: opacity 0.3s ease;
     }
-
     .password-popup h3 {
       margin-bottom: 20px;
       font-size: 20px;
       color: #333;
     }
-
     .password-popup input {
       width: 100%;
       padding: 12px;
@@ -48,11 +43,9 @@
       outline: none;
       transition: border 0.3s ease;
     }
-
     .password-popup input:focus {
       border: 1px solid #4CAF50;
     }
-
     .password-popup button {
       width: 100%;
       padding: 12px;
@@ -64,19 +57,15 @@
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
-
     .password-popup button:hover {
       background-color: #45a049;
     }
-
     .error-message {
       color: red;
       font-size: 14px;
       margin-top: 10px;
       display: none;
     }
-
-    /* Style de l'application principale */
     .app-window {
       background-color: #fff;
       width: 80%;
@@ -86,14 +75,12 @@
       padding: 20px;
       display: none;
     }
-
     .title-bar {
       font-size: 24px;
       font-weight: bold;
       margin-bottom: 20px;
       color: #4CAF50;
     }
-
     .search-bar {
       width: 100%;
       padding: 15px;
@@ -104,15 +91,12 @@
       outline: none;
       transition: border 0.3s ease;
     }
-
     .search-bar:focus {
       border: 1px solid #4CAF50;
     }
-
     .results {
       margin-top: 20px;
     }
-
     .result {
       display: flex;
       margin-bottom: 25px;
@@ -120,11 +104,9 @@
       border-bottom: 1px solid #f2f2f2;
       transition: transform 0.3s ease;
     }
-
     .result:hover {
       transform: scale(1.02);
     }
-
     .result img {
       width: 120px;
       height: 120px;
@@ -133,22 +115,18 @@
       margin-right: 20px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
-
     .result .details {
       flex-grow: 1;
     }
-
     .result .details h3 {
       font-size: 18px;
       font-weight: bold;
       color: #333;
     }
-
     .result .details p {
       font-size: 15px;
       color: #555;
     }
-
     .admin-mode {
       display: none;
       margin-top: 40px;
@@ -157,13 +135,11 @@
       border-radius: 10px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
-
     .admin-mode h3 {
       margin-bottom: 20px;
       font-size: 22px;
       color: #333;
     }
-
     .admin-mode input, .admin-mode textarea {
       width: 100%;
       padding: 12px;
@@ -174,11 +150,9 @@
       outline: none;
       transition: border 0.3s ease;
     }
-
     .admin-mode input:focus, .admin-mode textarea:focus {
       border: 1px solid #4CAF50;
     }
-
     .admin-mode button {
       padding: 12px 20px;
       font-size: 16px;
@@ -189,13 +163,16 @@
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
-
     .admin-mode button:hover {
       background-color: #45a049;
     }
   </style>
 </head>
 <body>
+
+  <!-- Compteurs invisibles -->
+  <div id="adminCounter" style="display: none;">0</div>
+  <div id="userCounter" style="display: none;">0</div>
 
   <!-- Popup pour entrer le mot de passe -->
   <div id="passwordPopup" class="password-popup">
@@ -206,14 +183,11 @@
   </div>
 
   <!-- Application principale -->
-  <div class="app-window" id="appWindow" style="display: none;">
+  <div class="app-window" id="appWindow">
     <div class="title-bar">🔍 Application de Recherche</div>
     
     <input type="text" id="searchInput" class="search-bar" placeholder="Rechercher...">
-
-    <div class="results" id="searchResults">
-      <!-- Les résultats de recherche s'afficheront ici -->
-    </div>
+    <div class="results" id="searchResults"></div>
 
     <div class="admin-mode" id="adminMode">
       <h3>Mode Admin</h3>
@@ -225,68 +199,52 @@
   </div>
 
   <script>
-    // Données initiales
     const items = [
       {
-        title: 'tantative de "paix"',
+        title: 'tentative de "paix"',
         imageUrl: 'https://via.placeholder.com/100',
-        description: 'j ai essayer de faire la paix avec les anarchiques mais ils ont refuser mais il ne seront bientot plus de se monde .',
-        keywords: ['paix', 'anarchiques', 'con'],
+        description: 'j ai essayer de faire la paix avec les anarchiques...',
+        keywords: ['paix', 'anarchiques'],
       },
       {
         title: 'commande d armes',
         imageUrl: 'https://via.placeholder.com/100',
-        description: 'j ai effectuer un achat d arme qui provient de l alpha corp. ',
-        keywords: ['alpha', 'alpha corp', 'arme'],
+        description: 'achat d armes chez alpha corp.',
+        keywords: ['alpha', 'arme'],
       },
       {
         title: 'racheter la ville',
         imageUrl: 'https://via.placeholder.com/100',
-        description: 'j ai essayer de racheter la ville mais l omega corp a refuser et ma meme menacer.',
-        keywords: ['rachat', 'argent', 'luciano'],
+        description: 'tentative de rachat refusée par omega corp.',
+        keywords: ['rachat', 'ville'],
       }
     ];
 
     const adminItems = [
-      {
-        title: 'Test 4 06/06/2025',
-        imageUrl: 'https://via.placeholder.com/100',
-        description: 'finalisation du projet titan.',
-        keywords: ['test4'],
-      },
-      {
-        title: 'Test 3 02/06/2025',
-        imageUrl: 'https://via.placeholder.com/100',
-        description: 'une erreur a été comise ma soeur a ete téléporter je ne sais pas ou peut erte qu elle est mort desintegrer.',
-        keywords: ['test3'],
-      },
-      {
-        title: 'Test 2 19/05/2025',
-        imageUrl: 'https://via.placeholder.com/100',
-        description: 'stabilization de la machine apres 16 essaye foireur mais c est bon.',
-        keywords: ['test2'],
-      },
-      {
-        title: 'Test 1 12/05/2025',
-        imageUrl: 'https://via.placeholder.com/100',
-        description: 'un problem avec la faille , elle a amener des chose venus d une autre dimention .',
-        keywords: ['test1'],
-      }
+      { title: 'Test 4 06/06/2025', imageUrl: 'https://via.placeholder.com/100', description: 'finalisation du projet titan.', keywords: ['test4'] },
+      { title: 'Test 3 02/06/2025', imageUrl: 'https://via.placeholder.com/100', description: 'erreur, sœur téléportée.', keywords: ['test3'] },
+      { title: 'Test 2 19/05/2025', imageUrl: 'https://via.placeholder.com/100', description: 'stabilisation machine.', keywords: ['test2'] },
+      { title: 'Test 1 12/05/2025', imageUrl: 'https://via.placeholder.com/100', description: 'faille dimensionnelle.', keywords: ['test1'] }
     ];
 
-    // Fonction pour valider le mot de passe
+    function incrementCounter(id) {
+      const counter = document.getElementById(id);
+      let count = parseInt(counter.innerText) || 0;
+      counter.innerText = count + 1;
+    }
+
     function validatePassword() {
       const enteredPassword = document.getElementById('passwordInput').value;
       const error = document.getElementById('error');
 
       if (enteredPassword === 'admin@') {
-        // Activer le mode admin
+        incrementCounter('adminCounter');
         items.push(...adminItems);
         document.getElementById('passwordPopup').style.display = 'none';
         document.getElementById('appWindow').style.display = 'block';
         searchItems();
       } else if (enteredPassword === '5694') {
-        // Mode normal
+        incrementCounter('userCounter');
         document.getElementById('passwordPopup').style.display = 'none';
         document.getElementById('appWindow').style.display = 'block';
         searchItems();
@@ -295,60 +253,42 @@
       }
     }
 
-    // Fonction pour afficher les résultats de la recherche
     function searchItems() {
-      const searchInput = document.getElementById('searchInput').value.toLowerCase();
-      const searchResults = document.getElementById('searchResults');
-      searchResults.innerHTML = '';
-
-      const filteredItems = items.filter(item => {
-        return item.keywords.some(keyword => keyword.toLowerCase().includes(searchInput));
-      });
-
-      filteredItems.forEach(item => {
-        const resultDiv = document.createElement('div');
-        resultDiv.classList.add('result');
-
-        resultDiv.innerHTML = `
+      const input = document.getElementById('searchInput').value.toLowerCase();
+      const results = document.getElementById('searchResults');
+      results.innerHTML = '';
+      const filtered = items.filter(item =>
+        item.keywords.some(keyword => keyword.toLowerCase().includes(input))
+      );
+      filtered.forEach(item => {
+        const div = document.createElement('div');
+        div.classList.add('result');
+        div.innerHTML = `
           <img src="${item.imageUrl}" alt="${item.title}">
           <div class="details">
             <h3>${item.title}</h3>
             <p>${item.description}</p>
-          </div>
-        `;
-
-        searchResults.appendChild(resultDiv);
+          </div>`;
+        results.appendChild(div);
       });
     }
 
-    // Fonction pour activer le mode admin
-    function toggleAdminMode() {
-      const adminMode = document.getElementById('adminMode');
-      adminMode.style.display = adminMode.style.display === 'none' ? 'block' : 'none';
-    }
-
-    // Fonction pour ajouter un nouvel élément en mode admin
     function addNewItem() {
       const title = document.getElementById('adminTitle').value;
       const imageUrl = document.getElementById('adminImageUrl').value;
       const description = document.getElementById('adminDescription').value;
-
       if (title && imageUrl && description) {
-        const newItem = {
-          title: title,
-          imageUrl: imageUrl,
-          description: description,
+        items.push({
+          title,
+          imageUrl,
+          description,
           keywords: [title.toLowerCase(), description.toLowerCase()],
-        };
-
-        items.push(newItem);
-        searchItems();  // Met à jour les résultats de la recherche
+        });
+        searchItems();
       }
     }
 
-    // Ajouter un événement pour rechercher à chaque changement dans le champ de recherche
     document.getElementById('searchInput').addEventListener('input', searchItems);
-
   </script>
 
 </body>
