@@ -158,78 +158,77 @@
     <div id="error" class="error">Mot de passe incorrect</div>
   </div>
 
-  <script>
-    const notes = {
-      note1: `récuperation de partie de la machine étrange qui vont servire a construire le projet titan`,
-      note2: `découvert de morceaux de faille avec des capaciter unique de téleportation multiversel`,
-      note3: `l'utilisation d'un morceau de faille a crée une faille sur la machine étrange`,
-      note4: `la faille n'arrete pas de grandir si elle continus elle vas téleporter la ville entiere`,
-      note5: `utilisation du projet a fait s'écrouler la grotte`,
-      note6: `activation du projet titan le 07/06/2025 à 19h`
-    };
+  <!-- ... ton HTML inchangé jusqu'ici -->
 
-    let folderId = '';
+<!-- Compteur d’actions caché -->
+<div id="actionCounter" style="display: none;">0</div>
 
-    // Fonction pour afficher les notes sans mot de passe (pour tous les dossiers sauf "Sécurisé")
-    function afficherNote(id) {
-      const note = notes[id];
-      const viewer = document.getElementById('noteContent');
-      viewer.textContent = note;
-    }
+<script>
+  const notes = {
+    note1: `récuperation de partie de la machine étrange qui vont servire a construire le projet titan`,
+    note2: `découvert de morceaux de faille avec des capaciter unique de téleportation multiversel`,
+    note3: `l'utilisation d'un morceau de faille a crée une faille sur la machine étrange`,
+    note4: `la faille n'arrete pas de grandir si elle continus elle vas téleporter la ville entiere`,
+    note5: `utilisation du projet a fait s'écrouler la grotte`,
+    note6: `activation du projet titan le 07/06/2025 à 19h`
+  };
 
-    // Fonction pour vérifier le mot de passe (pour le dossier "Sécurisé" seulement)
-    function verifierMotDePasse(correctPassword, noteId) {
-      folderId = noteId;
-      const popup = document.getElementById('popup');
-      const error = document.getElementById('error');
-      popup.style.display = 'block';
-      error.style.display = 'none';
-      const motDePasseInput = document.getElementById('motDePasse');
-      
-      motDePasseInput.onkeydown = function(e) {
-        if (e.key === 'Enter') {
-          validerMotDePasse(correctPassword);
-        }
-      };
-    }
+  let folderId = '';
 
-    function validerMotDePasse(correctPassword) {
-      const enteredPassword = document.getElementById('motDePasse').value;
-      const error = document.getElementById('error');
+  function afficherNote(id) {
+    const note = notes[id];
+    const viewer = document.getElementById('noteContent');
+    viewer.textContent = note;
+  }
 
-      if (enteredPassword === correctPassword) {
-        afficherNote(folderId);
-        document.getElementById('popup').style.display = 'none';
-      } else {
-        error.style.display = 'block';
+  function verifierMotDePasse(correctPassword, noteId) {
+    folderId = noteId;
+    const popup = document.getElementById('popup');
+    const error = document.getElementById('error');
+    popup.style.display = 'block';
+    error.style.display = 'none';
+    const motDePasseInput = document.getElementById('motDePasse');
+    
+    motDePasseInput.onkeydown = function(e) {
+      if (e.key === 'Enter') {
+        validerMotDePasse(correctPassword);
       }
-    }
-	       // Définir la date de fin du compte à rebours
-        var countDownDate = new Date("juin 07, 2025 20:00:00").getTime();
+    };
+  }
 
-        // Mettre à jour le compte à rebours toutes les secondes
-        var x = setInterval(function() {
-            
-            // Obtenir la date et l'heure actuelles
-            var now = new Date().getTime();
-            
-            // Calculer la différence entre la date cible et la date actuelle
-            var distance = countDownDate - now;
-            
-            // Calculer les minutes et secondes
-            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            
-            // Afficher le résultat dans l'élément avec l'ID "countdown"
-            document.getElementById("countdown").innerHTML = minutes + "m " + seconds + "s ";
-            
-            // Si le compte à rebours a terminé, afficher un message
-            if (distance < 0) {
-                clearInterval(x);
-                document.getElementById("countdown").innerHTML = "Le compte à rebours est terminé !";
-            }
-        }, 1000);
-  </script>
+  function validerMotDePasse(correctPassword) {
+    const enteredPassword = document.getElementById('motDePasse').value;
+    const error = document.getElementById('error');
+
+    if (enteredPassword === correctPassword) {
+      afficherNote(folderId);
+      document.getElementById('popup').style.display = 'none';
+
+      // ✅ Incrémenter le compteur uniquement ici
+      const compteurElement = document.getElementById('actionCounter');
+      let currentCount = parseInt(compteurElement.innerText, 10);
+      compteurElement.innerText = currentCount + 1;
+
+    } else {
+      error.style.display = 'block';
+    }
+  }
+
+  // Compte à rebours
+  var countDownDate = new Date("juin 07, 2025 20:00:00").getTime();
+  var x = setInterval(function() {
+    var now = new Date().getTime();
+    var distance = countDownDate - now;
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    document.getElementById("countdown").innerHTML = minutes + "m " + seconds + "s ";
+    if (distance < 0) {
+      clearInterval(x);
+      document.getElementById("countdown").innerHTML = "Le compte à rebours est terminé !";
+    }
+  }, 1000);
+</script>
+
 
 </body>
 </html>
